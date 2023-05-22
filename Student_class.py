@@ -6,7 +6,7 @@ class Student:
         self.finished_courses = []
         self.courses_in_progress = []
         self.grades = {}
-        self.sr_summ = []
+        self.sr_summ = 0
 
     def add_courses(self, course_name):
         self.finished_courses.append(course_name)
@@ -17,11 +17,24 @@ class Student:
             for j in self.grades[i]:
                 total += j
             sr = total/(len(self.grades[i]))
-        return self.sr_summ.append(sr)
+        self.sr_summ = sr
+
 
     def __str__(self):
-        ref = f'Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за домашние задания: {self.sr_summ}\nКурсы в процессе изучения: {self.courses_in_progress}\nЗавершенные курсы: {self.finished_courses}'
+        ref = f'Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за домашние задания: {self.sr_summ}\nКурсы в процессе изучения: {self.courses_in_progress}\nЗавершенные курсы: {self.finished_courses}\n'
         return ref
+
+    def __lt__(self, other):
+        if not isinstance(other, Student):
+            print("Этот учебные персонаж не из этого класса")
+            return
+        return self.sr_summ < other.sr_summ
+    #
+    def __gt__(self, other):
+        if not isinstance(other, Student):
+            print("Этот учебные персонаж не из этого класса")
+        return self.sr_summ > other.sr_summ
+
 
 
 class Mentor:
@@ -49,7 +62,7 @@ class Lecturer(Mentor): #лектор
     def __init__(self, name, surname):
         super().__init__(name, surname)
         self.grade_for_student = {}
-        self.sr_summ = []
+        self.sr_summ = 0
 
     def rate_lecture(self, student, course, grade):
         if course in student.courses_in_progress and course in self.courses_attached:
@@ -67,12 +80,25 @@ class Lecturer(Mentor): #лектор
             for j in self.grade_for_student[i]:
                 total += j
             sr = total/(len(self.grade_for_student[i]))
-        return self.sr_summ.append(sr)
+        self.sr_summ = sr
+
 
 
     def __str__(self):
-        ref = f'Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за лекцию: {self.sr_summ[0]}'
+        ref = f'Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за лекцию: {self.sr_summ}\n'
         return ref
+
+    def __lt__(self, other):
+        if not isinstance(other, Lecturer):
+            print("Этот учебные персонаж не ЛЕКТОР")
+            return
+        return self.sr_summ < other.sr_summ
+
+    def __gt__(self, other):
+        if not isinstance(other, Lecturer):
+            print("Этот учебные персонаж не ЛЕКТОР")
+            return
+        return self.sr_summ > other.sr_summ
 
 
 student_1 = Student('Petr', 'Zhuzhnev', 'man')
@@ -95,8 +121,8 @@ lecturer_1.courses_attached = reviever_1.courses_attached
 lecturer_1.rate_lecture(student_3, 'Python', 10)
 
 lecturer_1.rate_lecture(student_1, 'Python', 10)
-lecturer_1.rate_lecture(student_2, 'Python', 10)
-lecturer_1.rate_lecture(student_1, 'Python', 10)
+lecturer_1.rate_lecture(student_2, 'Python', 8)
+lecturer_1.rate_lecture(student_1, 'Python', 5)
 lecturer_1._summ_rate()
 print(lecturer_1)
 
@@ -105,9 +131,30 @@ print(lecturer_1)
 # print(type(cool_mentor)) #тип
 # print(Reviewer.mro()) #список наслеования "method resolution order" «порядок разрешения методов»
 reviever_1.rate_hw(student_1, 'Python', 10)
-reviever_1.rate_hw(student_2, 'Python', 10)
+reviever_1.rate_hw(student_2, 'Python', 5)
 reviever_1.rate_hw(student_3, 'Python', 10)
+reviever_2.rate_hw(student_1, 'Git', 5)
+reviever_2.rate_hw(student_2, 'Git', 10)
+reviever_2.rate_hw(student_3, 'Git', 2)
+reviever_1.rate_hw(student_1, 'Python', 5)
+reviever_1.rate_hw(student_2, 'Python', 2)
+reviever_1.rate_hw(student_3, 'Python', 8)
+reviever_2.rate_hw(student_1, 'Git', 7)
+reviever_2.rate_hw(student_2, 'Git', 5)
+reviever_2.rate_hw(student_3, 'Git', 3)
 print(reviever_1)
 
+student_1._summ_rate()
+student_2._summ_rate()
+student_3._summ_rate()
+lecturer_1._summ_rate()
 
 
+print(student_1 > lecturer_1)
+print(student_1 < lecturer_1)
+student_2 < lecturer_1
+lecturer_1 < student_3
+
+
+print(type(lecturer_1.sr_summ))
+print(type(student_1.sr_summ))
